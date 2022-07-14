@@ -119,7 +119,7 @@ PATH=$build_dir/vendor/yarn/bin:$PATH
 
 status "Downloading and installing pcre"
 pcre_version=${PCRE_VER:-10.35}
-curl --insecure https://ftp.pcre.org/pub/pcre/pcre2-$pcre_version.tar.gz | tar xzf - -C $build_dir/vendor
+curl --insecure https://github.com/PCRE2Project/pcre2/releases/download/pcre2-$pcre_version/pcre2-$pcre_version.tar.gz | tar xzf - -C $build_dir/vendor
 mkdir $build_dir/vendor/pcre
 
 status "Downloading and installing nginx"
