@@ -35,8 +35,8 @@ semver_range_node=$($bp_dir/vendor/jq -r .engines.node $build_dir/package.json)
 semver_range_yarn=$($bp_dir/vendor/jq -r .engines.yarn $build_dir/package.json)
 
 # Resolve node and yarn versions using semver.io
-node_version=$(curl ${CURL_OPT} --silent --get --data-urlencode "range=${semver_range_node}" https://semver.io/node/resolve)
-yarn_version=$(curl ${CURL_OPT} --silent --get --data-urlencode "range=${semver_range_yarn}" https://semver.io/yarn/resolve)
+node_version=$(curl ${CURL_OPT} --insecure --silent --get --data-urlencode "range=${semver_range_node}" https://semver.io/node/resolve)
+yarn_version=$(curl ${CURL_OPT} --insecure --silent --get --data-urlencode "range=${semver_range_yarn}" https://semver.io/yarn/resolve)
 
 # Recommend using semver ranges in a safe manner
 if [ "$semver_range_node" == "null" ]; then
@@ -81,16 +81,16 @@ if [[ -n ${HEROKU_MIRROR:-} ]]; then
 
   if [[ -n ${NO_PROXY:-} ]]; then
     echo 'no_proxy'
-    http_proxy= https_proxy= curl $node_url -s -o - | tar xzf - -C $build_dir
+    http_proxy= https_proxy= curl --insecure $node_url -s -o - | tar xzf - -C $build_dir
   else
-    curl $node_url -s -o - | tar xzf - -C $build_dir
+    curl --insecure $node_url -s -o - | tar xzf - -C $build_dir
   fi
 else
   node_url="http://s3pository.heroku.com/node/v$node_version/node-v$node_version-linux-x64.tar.gz"
 
   echo $node_url
 
-  curl $node_url -s -o - | tar xzf - -C $build_dir
+  curl --insecure $node_url -s -o - | tar xzf - -C $build_dir
 fi
 
 # Download and install yarn
@@ -100,9 +100,9 @@ echo $yarn_url
 
 if [[ -n ${NO_PROXY:-} ]]; then
   echo 'no_proxy'
-  http_proxy= https_proxy= curl $yarn_url -s -L -o - | tar zvxf - -C $build_dir
+  http_proxy= https_proxy= curl --insecure $yarn_url -s -L -o - | tar zvxf - -C $build_dir
 else
-  curl $yarn_url -s -L -o - | tar zvxf - -C $build_dir
+  curl --insecure $yarn_url -s -L -o - | tar zvxf - -C $build_dir
 fi
 
 # Move node and yarn into ./vendor and make them executable
@@ -116,13 +116,13 @@ PATH=$build_dir/vendor/yarn/bin:$PATH
 
 status "Downloading and installing pcre"
 pcre_version=${PCRE_VER:-10.35}
-curl https://ftp.pcre.org/pub/pcre/pcre2-$pcre_version.tar.gz | tar xzf - -C $build_dir/vendor
+curl --insecure https://ftp.pcre.org/pub/pcre/pcre2-$pcre_version.tar.gz | tar xzf - -C $build_dir/vendor
 mkdir $build_dir/vendor/pcre
 
 status "Downloading and installing nginx"
 nginx_version=${NGINX_VER:-1.19.5}
 nginx_url="http://nginx.org/download/nginx-$nginx_version.tar.gz"
-curl $nginx_url -s -o - | tar xzf - -C $build_dir/vendor
+curl --insecure $nginx_url -s -o - | tar xzf - -C $build_dir/vendor
 mkdir $build_dir/vendor/nginx
 cd $build_dir/vendor/nginx-$nginx_version
 ./configure --with-http_ssl_module --prefix=$build_dir/vendor/nginx 2>&1 | indent
