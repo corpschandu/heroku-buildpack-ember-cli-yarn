@@ -5,7 +5,7 @@ set -o pipefail   # don't ignore exit codes when piping output
 # set -x            # enable debugging
 
 # enable debugging
-[ "$BUILDPACK_XTRACE" ] && set -o xtrace
+# [ "$BUILDPACK_XTRACE" ] && set -o xtrace
 
 echo "Build Directory = $1"
 echo "Cache Directory = $2"
