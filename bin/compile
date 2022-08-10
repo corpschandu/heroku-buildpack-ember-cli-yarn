@@ -89,7 +89,10 @@ if [[ -n ${HEROKU_MIRROR:-} ]]; then
     curl --insecure $node_url -s -o - | tar xzf - -C $build_dir
   fi
 else
-  node_url="http://s3pository.heroku.com/node/v$node_version/node-v$node_version-linux-x64.tar.gz"
+  node_url="http://nodejs.org/dist/v$node_version/node-v$node_version-linux-x64.tar.gz"
+  # node_url="http://s3pository.heroku.com/node/v$node_version/node-v$node_version-linux-x64.tar.gz"
+  # https://mirrors.huaweicloud.com/nodejs/v8.11.2/node-v8.11.2.tar.gz
+  # http://nodejs.org/dist/v8.11.2/node-v8.11.2-linux-x64.tar.gz
 
   echo $node_url
 
